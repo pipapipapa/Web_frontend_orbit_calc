@@ -1,0 +1,207 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+:root {
+  --bg-color: #000000;
+  --bg-card: #1f2937;
+  --border-color: #3a3f58;
+  --border-light: #333333;
+
+  --text-header: #ffffff;
+  --text-main: #9ca3af;
+  --text-gray: #64748b;
+
+  --accent: #ffffff;
+  --accent-blue: #3b82f6;
+  --accent-green: #86efac;
+  --accent-red: #ef4444;
+  --accent-orange: #f59e0b;
+  --btn-dark: #23283f;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+a { text-decoration: none; color: inherit; }
+a:hover { color: white; }
+
+/* Хедер и Поиск */
+.site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    gap: 20px;
+}
+
+.home-btn img {
+    width: 40px;
+    height: 40px;
+    background: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    padding: 2px;
+    box-sizing: content-box;
+    opacity: 0.7;
+    transition: all 1s ease;
+}
+.home-btn:hover img { transform: scale(1.05); }
+
+.search-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-form input {
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px 15px;
+  color: var(--text-header);
+  font-size: 16px;
+  width: 250px;
+}
+.search-form input::placeholder { color: var(--text-gray); }
+.search-btn {
+  background: #0000008c;
+  border: 1px solid #ffffff33;
+  color: var(--text-main);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  transition: all 0.2s ease-in-out;
+  padding: 0;
+}
+.search-btn:hover { color: white; }
+
+/* Хлебные крошки */
+.breadcrumbs-container {
+  font-size: 14px; color: var(--text-gray); margin-bottom: 20px;
+}
+.breadcrumbs-current { color: white; margin-left: 5px; }
+
+/* Баннер корзины (Планета) */
+.mission-banner {
+    background: #000000;
+    border: 1px solid #ffffff66;
+    padding: 8px 20px;
+    border-radius: 8px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    transition: border-color 0.2s;
+    height: 50px;
+}
+
+.mission-banner img {
+    width: 30px;
+    height: 30px;
+    background: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 25px;
+    box-sizing: content-box;
+    opacity: 0.7;
+    transition: all 1s ease;
+}
+
+/* СТИЛЬ ПУСТОЙ КОРЗИНЫ (как просили) */
+.mission-banner.empty-cart {
+  opacity: 0.5;
+  color: var(--text-gray);
+}
+    
+.mission-banner:hover { opacity: 0.8; background-color: rgba(255,255,255,0.02); color: var(--text-gray); }
+
+.planet-icon { width: 30px; height: 30px; margin-bottom: 10px; opacity: 0.8; }
+.mission-banner h4 { font-size: 16px; font-weight: bold; margin: 0 0 5px 0; }
+.mission-banner p { margin: 0; font-size: 13px; color: var(--text-gray); }
+
+/* Карточка орбиты */
+.orbit-card {
+  background-color: var(--bg-card);
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 100%;
+}
+.orbit-card-img { height: 160px; object-fit: cover; border-bottom: 1px solid var(--border-light); }
+.orbit-card-body { padding: 20px; flex-grow: 1; }
+.orbit-card-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; color: white; }
+.orbit-card-text { font-size: 13px; color: var(--text-gray); }
+
+.orbit-card-btn {
+  width: 100%;
+  background-color: var(--btn-dark);
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background 0.2s;
+}
+.orbit-card-btn:hover { background-color: #3b82f6; }
+
+/* Страница Vibes (Видео) */
+.vibes-wrapper {
+  display: flex; 
+  justify-content: center; /* Центрируем по горизонтали */
+  align-items: center; 
+  min-height: 70vh;
+  width: 100%;             /* ВАЖНО: заставляем обертку занять всю ширину */
+  padding: 20px 0;
+}
+.vibes-card {
+  width: 350px; 
+  height: 600px; 
+  border-radius: 20px; 
+  position: relative; 
+  overflow: hidden;
+  background-color: #000; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  margin: 0 auto;          /* Дополнительная страховка для центрирования */
+}
+.vibes-media {
+  width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;
+}
+.vibes-overlay {
+  position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 20px 20px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.95)); z-index: 2;
+}
+
+/* Страница Миссии (Таблица) */
+.mission-table-wrapper {
+  background-color: var(--bg-card); border-radius: 12px; padding: 30px; margin-top: 20px;
+}
+.mission-thumb { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; }
+.table-dark { --bs-table-bg: transparent; --bs-table-color: white; }
+
+.top-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+/* Убедимся, что хедер выглядит аккуратно с одной кнопкой */
+.site-header {
+  display: flex;
+  align-items: center;
+  padding: 15px 40px;
+  border-bottom: 1px solid var(--border-light);
+  background-color: var(--bg-color);
+}
