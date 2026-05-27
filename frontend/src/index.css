@@ -304,13 +304,23 @@ a:hover { color: white; }
 
 /* --- АДАПТИВНОСТЬ --- */
 
-/* 1. Сетка карточек (Responsive Grid) */
-.g-4 {
+/* 1. Сетка карточек каталога орбит (Responsive Grid) */
+.orbits-grid {
     display: grid;
     /* МАГИЯ АДАПТИВНОСТИ: Карточки не меньше 250px, если места больше - растягиваются. 
        Если меньше - переносятся на новую строку. */
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
+}
+
+.orbits-grid > [class*="col"] {
+  padding: 0;
+  width: 100%;
+  max-width: none;
+}
+
+.orbits-grid .orbit-card {
+  width: 100%;
 }
 
 /* 2. Верхняя панель (Поиск и Крошки) */

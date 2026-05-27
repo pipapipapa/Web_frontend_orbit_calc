@@ -78,7 +78,7 @@ export const OrbitsPage: FC = () => {
                 />
             </Container>
             <Container fluid className="px-5">
-                <Row xs={1} md={2} lg={4} className="g-4">
+                <Row xs={1} md={2} lg={4} className="g-4 orbits-grid">
                     {orbits.map(orbit => {
                         const imgSrc = orbit.imageKey ? `${MINIO_BASE_URL}${orbit.imageKey}` : "/default-orbit.jpg";
                         return (

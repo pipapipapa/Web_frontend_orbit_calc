@@ -9,10 +9,10 @@ import path from 'path';
 const TARGET_API = "http://10.74.47.153:8080"; 
 
 export default defineConfig({
+  //base: "/",
   plugins: [
     react(),
     // mkcert(), 
-    base: "/pipapipapa/Web_frontend_orbit_calc",
     VitePWA({
       registerType: 'autoUpdate',
       devOptions: { enabled: true },
@@ -38,7 +38,13 @@ export default defineConfig({
         target: TARGET_API,
         changeOrigin: true,
         secure: false,
+      },
+      "/img-proxy": {
+        target: "http://10.74.47.153:9000",
+        changeOrigin: true,
+        secure: false,
       }
     }
+    
   }
 });
