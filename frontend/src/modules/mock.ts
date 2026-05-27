@@ -9,7 +9,7 @@ export interface Orbit {
     embedding?: number[];
 }
 
-export const MINIO_BASE_URL = "http://localhost:9000/orbits/";
+export const MINIO_BASE_URL = "http://10.74.47.153:9000/orbits/";
 
 export const ORBITS_MOCK: Orbit[] =[
     {
