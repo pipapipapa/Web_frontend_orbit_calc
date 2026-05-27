@@ -29,10 +29,7 @@ export default defineConfig({
   ] as any,
   server: {
     host: true,
-    https: {
-      key: fs.readFileSync('./cert.key'),
-      cert: fs.readFileSync('./cert.crt'),
-    },
+    https: false,
     proxy: {
       "/api": {
         target: TARGET_API,
