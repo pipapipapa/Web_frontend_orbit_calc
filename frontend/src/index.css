@@ -197,11 +197,156 @@ a:hover { color: white; }
   margin-bottom: 25px;
 }
 
-/* Убедимся, что хедер выглядит аккуратно с одной кнопкой */
 .site-header {
   display: flex;
   align-items: center;
   padding: 15px 40px;
   border-bottom: 1px solid var(--border-light);
   background-color: var(--bg-color);
+}
+
+.search-panel-content {
+  display: flex;
+}
+
+.search-panel-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+.ai-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-ai-upload, .btn-ai-reset {
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: 10px;
+  width: 160px;
+  height: 45.6px;
+  color: var(--text-main);
+  font-family: 'Inter', sans-serif;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  transition: all 0.2s ease-in-out;
+}
+
+.filter-panel {
+    border: 1px solid var(--border-color);
+}
+
+.status-badge {
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.status-DRAFT, .status-FORMED {
+    background-color: #3b82f633;
+    color: #93c5fd;
+}
+.status-COMPLETED {
+    background-color: #22c55e33;
+    color: #86efac;
+}
+.status-REJECTED {
+    background-color: #ef444433;
+    color: #fca5a5;
+}
+
+.auth-form{
+  width: 40%;
+  margin-left: 30%;
+}
+
+.input-table{
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px 15px;
+  color: var(--text-header);
+  font-size: 16px;
+  width: 150px;
+  height: 30px;
+}
+
+.input-inline{
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px 15px;
+  color: var(--text-header);
+  font-size: 16px;
+  width: 100px;
+  height: 30px;
+}
+
+.input-checkbox{
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px 15px;
+  color: var(--text-header);
+  font-size: 16px;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  margin-top: 10;
+}
+
+
+/* --- АДАПТИВНОСТЬ --- */
+
+/* 1. Сетка карточек (Responsive Grid) */
+.g-4 {
+    display: grid;
+    /* МАГИЯ АДАПТИВНОСТИ: Карточки не меньше 250px, если места больше - растягиваются. 
+       Если меньше - переносятся на новую строку. */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+/* 2. Верхняя панель (Поиск и Крошки) */
+@media (max-width: 768px) {
+    .top-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+        padding: 10px 20px;
+    }
+    .controls-right {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .search-panel-content {
+        grid-template-columns: 1fr; /* Поиск по картинке уходит под текстовый поиск */
+    }
+    .vibes-card {
+        width: 100%;
+        height: 80vh;
+    }
+}
+
+/* 3. Таблица миссий для мобилок */
+@media (max-width: 900px) {
+    .mission-item-row {
+        /* На телефонах перестраиваем строку таблицы в карточку (колонку) */
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 10px;
+        padding: 20px;
+    }
+    .header-row {
+        display: none; /* Скрываем заголовки таблицы на телефонах */
+    }
+    .mission-item-row img {
+        margin: 0 auto;
+    }
 }

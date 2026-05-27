@@ -1,75 +1,99 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { FC, FormEvent } from 'react';
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
-import { ORBITS_MOCK, MISSION_MOCK, type Orbit } from '../modules/mock';
+import { useSelector, useDispatch } from 'react-redux';
+import { api } from '../api';
 import { Header } from '../components/Header';
-import { BreadCrumbs } from '../components/BreadCrumbs';
-import { ROUTE_LABELS } from '../Routes';
+import type { RootState, AppDispatch } from '../store';
+import { addOrbitToMissionThunk, fetchMissionDraftThunk } from '../store/slices/missionSlice';
+import { MINIO_BASE_URL, type Orbit } from '../modules/mock';
+import { useOrbitSearch } from '../hooks/useOrbitSearch';
+import { SearchPanel } from '../components/SearchPanel';
+import { setSearchQuery } from '../store/slices/filterSlice';
 
 export const OrbitsPage: FC = () => {
-    const [query, setQuery] = useState("");
-    const[orbits, setOrbits] = useState<Orbit[]>(ORBITS_MOCK);
-    const navigate = useNavigate();
+    const [rawOrbits, setRawOrbits] = useState<any[]>([]);
+    const dispatch = useDispatch<AppDispatch>();
+    
+    // Хук для CLIP
+    const { orbits, ready, progress, searchByImage, resetSearch } = useOrbitSearch(rawOrbits);
+    
+    // Состояние авторизации
+    const { isAuthenticated, role } = useSelector((state: RootState) => state.auth);
+    const { searchQuery } = useSelector((state: RootState) => state.filter);
 
-    const handleSearch = (e: FormEvent) => {
-        e.preventDefault();
-        const filtered = ORBITS_MOCK.filter(o => 
-            o.name.toLowerCase().includes(query.toLowerCase())
-        );
-        setOrbits(filtered);
+    // Функция загрузки данных по текстовому запросу
+    const loadData = (query: string = "") => {
+        api.orbits.list({ search: query }).then(res => {
+            const backendData = res.data.data ||[];
+
+            const frontendOrbits: Orbit[] = backendData.map((item: any) => ({
+                id: item.id,
+                name: item.name,
+                description: item.description,
+                descriptionEn: item.description_en || item.description, 
+                altitudeKm: item.altitude_km,
+                imageKey: item.image_key,
+                videoKey: item.video_key,
+                embedding: item.embedding
+            }));
+
+            setRawOrbits(frontendOrbits);
+        });
     };
 
-    const missionIsEmpty = MISSION_MOCK.items.length === 0;
+    // Загрузка данных и корзины при входе
+    useEffect(() => {
+        loadData();
+        if (isAuthenticated) {
+            dispatch(fetchMissionDraftThunk());
+        }
+    }, [isAuthenticated, dispatch]);
+
+    const handleAdd = (orbitId: number) => {
+        dispatch(addOrbitToMissionThunk({ orbit_id: orbitId }));
+    };
+
+    useEffect(() => {
+        loadData(searchQuery);
+    }, []);
+
+    const handleTextSearch = (query: string) => {
+        dispatch(setSearchQuery(query)); // Сохраняем в Redux
+        loadData(query);                 // Ищем на бэкенде
+    };
 
     return (
         <>
             <Header />
-            
             <Container className="mt-4">
-                <div className="top-controls">
-                    <BreadCrumbs crumbs={[{ label: ROUTE_LABELS.HOME }]} />
-                    
-                <div 
-                    className={`mission-banner ${missionIsEmpty ? 'empty-cart' : ''}`} 
-                    onClick={() => navigate('/mission')}
-                >
-                    <img src="/planet.svg" alt="Planet" className="planet-icon" />
-                    <h4> : 0</h4>
-                </div>
-
-
-                    <form className="search-form" onSubmit={handleSearch}>
-                        <input 
-                            type="text" 
-                            placeholder="Фильтр орбит" 
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)} 
-                        />
-
-                        <button type="submit" className="search-btn" title="Искать">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <path d="m21 21-4.35-4.35"></path>
-                            </svg>
-                        </button>
-                    </form>
-                </div>
-
+                <SearchPanel
+                    initialQuery={searchQuery} // Передаем начальное значение
+                    onTextSearch={handleTextSearch}
+                    onImageSearch={searchByImage}
+                    onResetAi={resetSearch}
+                    aiReady={ready}
+                    aiProgress={progress}
+                />
+            </Container>
+            <Container fluid className="px-5">
                 <Row xs={1} md={2} lg={4} className="g-4">
                     {orbits.map(orbit => {
-                        const imgSrc = orbit.imageKey || "/default-orbit.jpg";
-                        
+                        const imgSrc = orbit.imageKey ? `${MINIO_BASE_URL}${orbit.imageKey}` : "/default-orbit.jpg";
                         return (
                             <Col key={orbit.id}>
                                 <Card className="orbit-card">
-                                    <Card.Img variant="top" src={imgSrc} className="orbit-card-img" />
+                                    <Card.Img src={imgSrc} className="orbit-card-img" />
                                     <div className="orbit-card-body">
-                                        <Link to={`/orbit/${orbit.id}`}>
-                                            <h5 className="orbit-card-title">{orbit.name}</h5>
-                                        </Link>
+                                        <Link to={`/orbit/${orbit.id}`}><h5 className="orbit-card-title">{orbit.name}</h5></Link>
                                         <p className="orbit-card-text">Высота: ~{orbit.altitudeKm} км</p>
                                     </div>
+                                    {isAuthenticated && role === 'CLIENT' && (
+                                        <Button className="orbit-card-btn" onClick={() => handleAdd(orbit.id)}>
+                                            Включить в план
+                                        </Button>
+                                    )}
                                 </Card>
                             </Col>
                         );
